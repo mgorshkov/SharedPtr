@@ -65,6 +65,13 @@ TEST_F(SharedPtrTest, testDefault)
     // no crash, test has passed
 }
 
+TEST_F(SharedPtrTest, testAssignFromDefault)
+{
+    SharedPtr<int> ptr;
+    SharedPtr<int> ptr2 = ptr;
+    // no crash, test has passed
+}
+
 TEST_F(SharedPtrTest, testSharedPtrDeletesObject)
 {
     {

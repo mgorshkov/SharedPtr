@@ -22,7 +22,9 @@ public:
     
     // Copy constructor
     SharedPtr(const SharedPtr& another) noexcept {
-        copy_from(another);
+        if (another.m_control_block != nullptr) {
+            copy_from(another);
+        }
     }
     
     // Initializing constructor. Once constructed, ptr is owned by the SharedPtr
@@ -33,7 +35,7 @@ public:
     }
     
     // Assignment operator
-    const SharedPtr& operator = (const SharedPtr& another) noexcept
+    SharedPtr& operator = (const SharedPtr& another) noexcept
     {
         if (this != &another) {
             release();
@@ -52,21 +54,12 @@ public:
         return **m_control_block;
     }
     
-    // Const dereference operator
-    const T* operator * () const noexcept {
-        return **m_control_block;
-    }
-    
     // Reset current ownership and acquire a new one of ptr
     // @param ptr - non-null pointer to acquire ownership of
     void reset(T* ptr) {
         release();
         acquire(ptr);
     }
-    
-    // Move semantics is not enabled in this implementation
-    SharedPtr(SharedPtr&&) = delete;
-    const SharedPtr& operator = (SharedPtr&&) = delete;
     
 private:
     class ControlBlock {
@@ -95,10 +88,6 @@ private:
         }
         
         T& operator * () noexcept {
-            return *m_ptr;
-        }
-        
-        const T& operator * () const noexcept {
             return *m_ptr;
         }
         
